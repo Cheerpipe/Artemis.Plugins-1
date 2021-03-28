@@ -2,8 +2,8 @@
   "profiles": {
     "Artemis.Plugins.LayerBrushes.Color": {
       "commandName": "Executable",
-      "executablePath": ".\\Artemis.UI.exe",
-      "workingDirectory": "..\\..\\..\\..\\Artemis\\src\\Artemis.UI\\bin\\x64\\Debug\\net5.0-windows"
+      "executablePath": "D:\\Repos\\Artemis\\src\\Artemis.UI\\bin\\x64\\Debug\\net5.0-windows\\Artemis.UI.exe",
+      "workingDirectory": "D:\\Repos\\Artemis\\src\\Artemis.UI\\bin\\x64\\Debug\\net5.0-windows\\"
     }
   }
 }
