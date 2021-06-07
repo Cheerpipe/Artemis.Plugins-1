@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using Artemis.Core;
 using Artemis.Core.Modules;
 using Artemis.Core.Services;
@@ -15,12 +16,14 @@ namespace Artemis.Plugins.Modules.General
         private readonly PluginSetting<bool> _enableActiveWindow;
         private readonly PluginSetting<bool> _disableDefaultProfilesCreation;
         private readonly IColorQuantizerService _quantizerService;
+        private readonly IProcessMonitorService _processMonitorService;
 
-        public GeneralModule(IColorQuantizerService quantizerService, PluginSettings settings)
+        public GeneralModule(IColorQuantizerService quantizerService, PluginSettings settings, IProcessMonitorService processMonitorService)
         {
             _quantizerService = quantizerService;
             _enableActiveWindow = settings.GetSetting("EnableActiveWindow", true);
             _disableDefaultProfilesCreation = settings.GetSetting("DisableDefaultProfilesCreation", false);
+            _processMonitorService = processMonitorService;
 
             DisplayName = "General";
             DisplayIcon = "Images/bow.svg";
@@ -38,7 +41,7 @@ namespace Artemis.Plugins.Modules.General
 
             AddTimedUpdate(TimeSpan.FromMilliseconds(250), _ => UpdateCurrentWindow(), "UpdateCurrentWindow");
             AddTimedUpdate(TimeSpan.FromSeconds(1.5), _ => UpdatePerformance(), "UpdatePerformance");
-
+            AddTimedUpdate(TimeSpan.FromSeconds(1), _ => UpdateRunningProcesses(), "UpdateRunningProcesses");
             ApplyEnableActiveWindow();
         }
 
@@ -74,6 +77,11 @@ namespace Artemis.Plugins.Modules.General
             DataModel.PerformanceDataModel.CpuUsage = Performance.GetCpuUsage();
             DataModel.PerformanceDataModel.AvailableRam = Performance.GetPhysicalAvailableMemoryInMiB();
             DataModel.PerformanceDataModel.TotalRam = Performance.GetTotalMemoryInMiB();
+        }
+
+        private void UpdateRunningProcesses()
+        {
+            DataModel.RunningProcesses = _processMonitorService.GetRunningProcesses().Select(p => p.ProcessName).Except(Constants.IgnoredProcessList).ToList();
         }
 
         private void EnableActiveWindowOnSettingChanged(object sender, EventArgs e)
