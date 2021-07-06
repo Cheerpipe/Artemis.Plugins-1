@@ -47,6 +47,7 @@ namespace Artemis.Plugins.Input.LayerBrush.Keypress
 
             lock (_effects)
             {
+                _effects.Where(w => w.Finished).ToList().ForEach(w => (w as IDisposable)?.Dispose());
                 _effects.RemoveAll(w => w.Finished);
                 foreach (IKeyPressEffect keypressWave in _effects)
                     keypressWave.Update(deltaTime);

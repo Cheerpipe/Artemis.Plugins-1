@@ -4,7 +4,7 @@ using SkiaSharp;
 
 namespace Artemis.Plugins.Input.LayerBrush.Keypress.Effects
 {
-    public class KeypressRipple : IKeyPressEffect
+    public class KeypressRipple : IKeyPressEffect, IDisposable
     {
         private readonly KeypressBrush _brush;
         private float _progress;
@@ -167,6 +167,13 @@ namespace Artemis.Plugins.Input.LayerBrush.Keypress.Effects
         {
             if (_brush.Properties.RippleBehavior.CurrentValue == RippleBehavior.ContinuousWhileKeyPressed)
                 Expand = false;
+        }
+
+
+        public void Dispose()
+        {
+            Paint?.Dispose();
+            _trailPaint?.Dispose();
         }
     }
 }
