@@ -51,6 +51,7 @@ namespace Artemis.Plugins.Devices.DMX
             }
 
             _rgbService.AddDeviceProvider(RgbDeviceProvider);
+            _rgbService.Surface.RegisterUpdateTrigger(new TimerUpdateTrigger(new CustomUpdateData().FlushLeds().Render(false)) { UpdateFrequency = 5 });
         }
 
         public override void Disable()
@@ -78,7 +79,6 @@ namespace Artemis.Plugins.Devices.DMX
             _rgbService.Surface.Update(true);
             // Give the update queues time to process
             Thread.Sleep(200);
-
             _rgbService.RemoveDeviceProvider(RgbDeviceProvider);
         }
     }

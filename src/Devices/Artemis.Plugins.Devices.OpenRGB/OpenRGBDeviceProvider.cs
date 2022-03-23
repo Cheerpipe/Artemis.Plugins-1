@@ -1,6 +1,7 @@
 ﻿using Artemis.Core;
 using Artemis.Core.DeviceProviders;
 using Artemis.Core.Services;
+using RGB.NET.Core;
 using RGB.NET.Devices.OpenRGB;
 using Serilog;
 using System.Collections.Generic;
@@ -69,6 +70,7 @@ namespace Artemis.Plugins.Devices.OpenRGB
             {
                 _reconnectTimer.Stop();
             }
+            _rgbService.Surface.RegisterUpdateTrigger(new TimerUpdateTrigger(new CustomUpdateData().FlushLeds().Render(false)) { UpdateFrequency = 5 });
         }
 
         public override void Disable()
